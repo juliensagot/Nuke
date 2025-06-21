@@ -102,7 +102,13 @@ struct ImageProcessingExtensions {
             return nil
         }
         let rect = CGRect(origin: CGPoint.zero, size: cgImage.size)
-        let path = CGPath(roundedRect: rect, cornerWidth: radius, cornerHeight: radius, transform: nil)
+      
+        #if canImport(UIKit)
+          let path = UIBezierPath(roundedRect: rect, cornerRadius: radius).cgPath
+        #else
+          let path = CGPath(roundedRect: rect, cornerWidth: radius, cornerHeight: radius, transform: nil)
+        #endif
+      
         ctx.addPath(path)
         ctx.clip()
         ctx.draw(cgImage, in: CGRect(origin: CGPoint.zero, size: cgImage.size))
